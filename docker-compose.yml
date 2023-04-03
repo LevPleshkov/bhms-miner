@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  miner_db:
+    image: postgres
+    container_name: bhms-miner-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DATABASE}
+    ports:
+      - '${POSTGRES_PORT}:${POSTGRES_PORT}'
+    volumes: 
+      - miner_db:${POSTGRES_DATA_VOLUME}
+
+volumes:
+  miner_db:
+    driver: local
