@@ -27,12 +27,12 @@ class Post(models.Model):
     owner_username = models.CharField('Owner\'s Username', max_length=60)
     likes_count = models.IntegerField('Likes Count')
     comments_count = models.IntegerField('Comments Count')
-    caption = models.TextField('Caption')
+    caption = models.TextField('Caption', blank=True)
     timestamp = models.DateTimeField('Timestamp')
     is_sponseored = models.BooleanField('Is Sponsored')
-    hashtags = models.ManyToManyField(Hashtag)
-    location = models.ForeignKey(Location, null=True, on_delete=models.SET_NULL)
-    profile = models.ForeignKey(Profile, null=True, on_delete=models.SET_NULL)
+    hashtags = models.ManyToManyField(Hashtag, null=True, blank=True)
+    location = models.ForeignKey(Location, null=True, on_delete=models.SET_NULL, blank=True)
+    profile = models.ForeignKey(Profile, null=True, on_delete=models.SET_NULL, blank=True)
 
     class Meta:
         verbose_name = 'Post'
