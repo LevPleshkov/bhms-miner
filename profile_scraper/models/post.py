@@ -4,7 +4,7 @@ from .meta import ScrapeInfo
 
 
 class Hashtag(ScrapeInfo):
-    title = models.CharField('Hashtag', max_length=100)
+    title = models.CharField('Hashtag', max_length=100, unique=True)
 
     class Meta:
         verbose_name = 'Hashtag'
@@ -15,7 +15,7 @@ class Hashtag(ScrapeInfo):
 
 class Location(ScrapeInfo):
     external_id = models.CharField('External ID', max_length=60)
-    name = models.CharField('Location Name', max_length=300)
+    name = models.CharField('Location Name', max_length=300, unique=True)
 
     class Meta:
         verbose_name = 'Location'

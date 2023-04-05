@@ -22,7 +22,7 @@ class BusinessInfo(models.Model):
 class Profile(ScrapeInfo):
     external_id = models.CharField('External ID', max_length=60)
     full_name = models.CharField('Full Name', 'full_name', max_length=60)
-    username = models.CharField('Username', 'username', max_length=60)
+    username = models.CharField('Username', 'username', max_length=60, unique=True)
     biography = models.CharField('Biography', 'biography', max_length=300)
     followers = models.IntegerField('Followed By')
     followees = models.IntegerField('Follows')
