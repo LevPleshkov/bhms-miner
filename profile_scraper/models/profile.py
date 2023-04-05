@@ -1,8 +1,10 @@
 from django.db import models
+from .meta import ScrapeInfo
 
 
 class BusinessInfo(models.Model):
-    category = models.CharField('Business Category', max_length=100, blank=True)
+    category = models.CharField(
+        'Business Category', max_length=100, blank=True)
     contact_method = models.CharField('Contact Method', max_length=15)
     address = models.CharField('Address', max_length=60, blank=True)
     email = models.EmailField('Email', max_length=30, blank=True)
@@ -17,7 +19,7 @@ class BusinessInfo(models.Model):
         return f'{self.category}'
 
 
-class Profile(models.Model):
+class Profile(ScrapeInfo):
     external_id = models.CharField('External ID', max_length=60)
     full_name = models.CharField('Full Name', 'full_name', max_length=60)
     username = models.CharField('Username', 'username', max_length=60)

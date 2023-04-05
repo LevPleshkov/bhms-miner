@@ -1,0 +1,19 @@
+from django.db import models
+from django.utils import timezone
+
+
+class ScrapeInfo(models.Model):
+    created = models.DateTimeField('Created Timestamp', editable=False)
+    modified = models.DateTimeField('Modified Timestamp')
+    last_scraped = models.DateTimeField(
+        'Last Scrpaed Timestamp', null=True, blank=True)
+    scrape_count = models.IntegerField('Scrape Count', default=0)
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.created = timezone.now()
+        self.modified = timezone.now()
+        return super(ScrapeInfo, self).save(*args, **kwargs)
+
+    class Meta:
+        abstract = True

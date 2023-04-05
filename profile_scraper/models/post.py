@@ -1,8 +1,9 @@
 from django.db import models
 from .profile import Profile
+from .meta import ScrapeInfo
 
 
-class Hashtag(models.Model):
+class Hashtag(ScrapeInfo):
     title = models.CharField('Hashtag', max_length=100)
 
     class Meta:
@@ -12,7 +13,7 @@ class Hashtag(models.Model):
         return f'{self.title}'
 
 
-class Location(models.Model):
+class Location(ScrapeInfo):
     external_id = models.CharField('External ID', max_length=60)
     name = models.CharField('Location Name', max_length=300)
 
@@ -23,16 +24,18 @@ class Location(models.Model):
             return f'{self.name}'
 
 
-class Post(models.Model):
+class Post(ScrapeInfo):
     owner_username = models.CharField('Owner\'s Username', max_length=60)
     likes_count = models.IntegerField('Likes Count')
     comments_count = models.IntegerField('Comments Count')
     caption = models.TextField('Caption', blank=True)
     timestamp = models.DateTimeField('Timestamp')
     is_sponseored = models.BooleanField('Is Sponsored')
-    hashtags = models.ManyToManyField(Hashtag, null=True, blank=True)
-    location = models.ForeignKey(Location, null=True, on_delete=models.SET_NULL, blank=True)
-    profile = models.ForeignKey(Profile, null=True, on_delete=models.SET_NULL, blank=True)
+    hashtags = models.ManyToManyField(Hashtag, blank=True)
+    location = models.ForeignKey(
+        Location, null=True, on_delete=models.DO_NOTHING, blank=True)
+    profile = models.ForeignKey(
+        Profile, null=True, on_delete=models.DO_NOTHING, blank=True)
 
     class Meta:
         verbose_name = 'Post'
