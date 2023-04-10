@@ -30,7 +30,7 @@ class Post(ScrapeInfo):
     comments_count = models.IntegerField('Comments Count')
     caption = models.TextField('Caption', blank=True)
     timestamp = models.DateTimeField('Timestamp')
-    is_sponseored = models.BooleanField('Is Sponsored')
+    is_sponsored = models.BooleanField('Is Sponsored')
     hashtags = models.ManyToManyField(Hashtag, blank=True)
     location = models.ForeignKey(
         Location, null=True, on_delete=models.DO_NOTHING, blank=True)
