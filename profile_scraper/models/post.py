@@ -33,9 +33,9 @@ class Post(ScrapeInfo):
     is_sponsored = models.BooleanField('Is Sponsored', default=False)
     hashtags = models.ManyToManyField(Hashtag, blank=True)
     location = models.ForeignKey(
-        Location, null=True, on_delete=models.DO_NOTHING, blank=True)
+        Location, on_delete=models.DO_NOTHING, null=True, blank=True)
     profile = models.ForeignKey(
-        Profile, null=True, on_delete=models.DO_NOTHING, blank=True)
+        Profile, on_delete=models.DO_NOTHING, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Post'

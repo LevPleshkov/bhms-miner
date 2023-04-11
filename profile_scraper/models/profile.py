@@ -29,9 +29,8 @@ class Profile(ScrapeInfo):
     profile_pic = models.URLField('Profile Picture', null=True, blank=True)
     is_business = models.BooleanField('Is Business', default=False)
 
-    businsess_info = models.OneToOneField(
-        BusinessInfo, on_delete=models.CASCADE, verbose_name='Business Info'
-    )
+    business_info = models.OneToOneField(
+        BusinessInfo, on_delete=models.CASCADE, null=True, blank=True,)
 
     class Meta:
         verbose_name = 'Profile'

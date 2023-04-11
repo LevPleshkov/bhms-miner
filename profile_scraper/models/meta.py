@@ -4,8 +4,8 @@ from django.utils import timezone
 
 class ScrapeInfo(models.Model):
     external_id = models.CharField('External ID', max_length=60, null=True)
-    created = models.DateTimeField('Created Timestamp', editable=False)
-    modified = models.DateTimeField('Modified Timestamp')
+    created = models.DateTimeField('Created Timestamp', auto_now_add=True)
+    modified = models.DateTimeField('Modified Timestamp', auto_now=True)
     last_scraped = models.DateTimeField(
         'Last Scrpaed Timestamp', null=True, blank=True)
     scrape_count = models.IntegerField('Scrape Count', default=0)
