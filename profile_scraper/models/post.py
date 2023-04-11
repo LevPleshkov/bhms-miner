@@ -14,7 +14,6 @@ class Hashtag(ScrapeInfo):
 
 
 class Location(ScrapeInfo):
-    external_id = models.CharField('External ID', max_length=60)
     name = models.CharField('Location Name', max_length=300, unique=True)
 
     class Meta:

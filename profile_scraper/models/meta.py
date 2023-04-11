@@ -3,6 +3,7 @@ from django.utils import timezone
 
 
 class ScrapeInfo(models.Model):
+    external_id = models.CharField('External ID', max_length=60, null=True)
     created = models.DateTimeField('Created Timestamp', editable=False)
     modified = models.DateTimeField('Modified Timestamp')
     last_scraped = models.DateTimeField(
