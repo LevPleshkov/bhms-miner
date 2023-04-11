@@ -15,6 +15,7 @@ class Hashtag(ScrapeInfo):
 
 class Location(ScrapeInfo):
     name = models.CharField('Location Name', max_length=300, unique=True)
+    slug = models.SlugField('Slug', max_length=300, unique=True)
 
     class Meta:
         verbose_name = 'Location'
@@ -27,9 +28,9 @@ class Post(ScrapeInfo):
     owner_username = models.CharField('Owner\'s Username', max_length=60)
     likes_count = models.IntegerField('Likes Count')
     comments_count = models.IntegerField('Comments Count')
-    caption = models.TextField('Caption', blank=True)
+    caption = models.TextField('Caption', null=True, blank=True)
     timestamp = models.DateTimeField('Timestamp')
-    is_sponsored = models.BooleanField('Is Sponsored')
+    is_sponsored = models.BooleanField('Is Sponsored', default=False)
     hashtags = models.ManyToManyField(Hashtag, blank=True)
     location = models.ForeignKey(
         Location, null=True, on_delete=models.DO_NOTHING, blank=True)
