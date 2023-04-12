@@ -2,8 +2,9 @@
     constants and functions.
 """
 from os.path import exists
+from typing import Optional
 from lxml import etree
-from django.core.management.base import CommandError
+from django.core.management.base import BaseCommand, CommandError
 
 # Tags in xml-file that contain required information about post
 post_tags = ['id', 'caption', 'hashtags', 'timestamp',
@@ -18,8 +19,14 @@ location_list_tag = 'location_list'
 location_tags = ['id', 'name', 'slug']
 
 
-def _get_root(self, path) -> etree.Element:
+def _get_root(cmd: BaseCommand, path: str) -> Optional[etree.Element]:
     """ Get root element of XML file. """
+    if _validate_path(cmd, path):
+        return etree.parse(path).getroot()
+
+
+def _validate_path(cmd: BaseCommand, path: str) -> bool:
     if not path or not exists(path):
-        raise CommandError(self.style.ERROR("File path does not exist"))
-    return etree.parse(path).getroot()
+        cmd.stdout.write(f'here')
+        raise CommandError(cmd.style.ERROR("File path does not exist"))
+    return True

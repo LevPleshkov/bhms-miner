@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand, CommandError, CommandParser
 from profile_scraper.models import (
     Profile, Post, Hashtag, Location,)
 
-from _utils import (
+from ._utils import (
     post_tags,
     city_info_tag, location_list_tag, location_tags,
     _get_root,)
@@ -34,14 +34,13 @@ class Command(BaseCommand):
     def handle(self, *args: Any, **options: Any) -> Optional[str]:
         mode = options['mode']
         if mode == 'upload':
-            # if load_path := options['path']:
             self._load_posts(options['path'], options['beg'], options['end'])
         else:
             raise CommandError(
                 self.style.ERROR('Sorry, only upload functionality is implemented.'),)
 
     def _load_posts(self, path: str, beg: int = None, end: int = None) -> None:
-        root = _get_root(path)
+        root = _get_root(self, path)
         posts_cnt = hashtags_cnt = locations_cnt = 0
 
         # 1. Parse locations fisrt, because we need instagram-generated slugs,
