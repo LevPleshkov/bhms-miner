@@ -1,13 +1,15 @@
-from os.path import exists
-from lxml import etree
 from typing import Any, Optional, List, Dict
 from tqdm import tqdm
 
 from django.core.management.base import BaseCommand, CommandError, CommandParser
-from django.utils import timezone
 
 from profile_scraper.models import (
-    Profile, BusinessInfo, Post, Hashtag, Location)
+    Profile, Post, Hashtag, Location,)
+
+from _utils import (
+    post_tags,
+    city_info_tag, location_list_tag, location_tags,
+    _get_root,)
 
 
 class Command(BaseCommand):
@@ -20,13 +22,13 @@ class Command(BaseCommand):
     def add_arguments(self, parser: CommandParser) -> None:
         parser.add_argument('mode', type=str, choices=['download', 'upload'])
         parser.add_argument('-p', '--path', type=str, required=True,
-                           help="Specify path to xml-file with posts that \
+                            help="Specify path to xml-file with posts that \
                             were scraped by locations or hashtags",)
         parser.add_argument('-b', '--beg', type=int,
-                           help="Specify the first item in xml-file \
+                            help="Specify the first item in xml-file \
                             to upload into database, default is 0",)
         parser.add_argument('-e', '--end', type=int,
-                           help="Specify the last item in xml-file \
+                            help="Specify the last item in xml-file \
                             to upload into database, default is len(items)",)
 
     def handle(self, *args: Any, **options: Any) -> Optional[str]:
@@ -39,7 +41,7 @@ class Command(BaseCommand):
                 self.style.ERROR('Sorry, only upload functionality is implemented.'),)
 
     def _load_posts(self, path: str, beg: int = None, end: int = None) -> None:
-        root = self._get_root(path)
+        root = _get_root(path)
         posts_cnt = hashtags_cnt = locations_cnt = 0
 
         # 1. Parse locations fisrt, because we need instagram-generated slugs,
@@ -55,9 +57,6 @@ class Command(BaseCommand):
             locations_cnt += len(created)
 
         # 2. Parse posts while saving all objects
-        post_tags = ['id', 'caption', 'hashtags', 'timestamp',
-                     'commentsCount', 'likesCount', 'isSponsored',
-                     'locationId', 'locationName', 'ownerUsername', 'ownerId',]
         items = root.findall('item')
         beg = beg if beg else 0
         end = end if end else len(items)
@@ -126,9 +125,6 @@ class Command(BaseCommand):
                                              f"{posts_cnt} posts."),)
 
     def _parse_locations(self, root) -> List[Dict]:
-        city_info_tag = 'city_info'
-        location_list_tag = 'location_list'
-        location_tags = ['id', 'name', 'slug']
         data = [
             *zip(*[root.xpath(f'//item/{city_info_tag}/{tag}/text()')
                    for tag in location_tags]),
@@ -136,11 +132,6 @@ class Command(BaseCommand):
               for row in zip(*[root.xpath(f'//item/{location_list_tag}/{tag}')
                                for tag in location_tags])],]
         return [dict(zip(location_tags, part)) for part in data if part]
-
-    def _get_root(self, path) -> etree.Element:
-        if not path or not exists(path):
-            raise CommandError(self.style.ERROR("File path does not exist"))
-        return etree.parse(path).getroot()
 
     def _validate_post_data(self, post: dict) -> bool:
         return all([post['id'],
