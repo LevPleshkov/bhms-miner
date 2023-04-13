@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from decouple import config
 from pathlib import Path
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -127,3 +128,16 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Celery
+
+CELERY_BROKER_URL = f"redis://{config('REDIS_HOST')}:{config('REDIS_PORT')}"
+CELERY_RESULT_BACKENDL = f"redis://{config('REDIS_HOST')}:{config('REDIS_PORT')}"
+
+CELERY_BEAT_SCHEDULE = {
+    'sample_task': {
+        'task': 'profile_scraper.tasks.get_profile_task',
+        'schedule': crontab(minute='*/1'),
+    },
+}
