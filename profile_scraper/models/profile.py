@@ -1,36 +1,40 @@
 from django.db import models
+from .meta import ScrapeInfo
 
 
 class BusinessInfo(models.Model):
-    category = models.CharField('Business Category', max_length=100, blank=True)
-    contact_method = models.CharField('Contact Method', max_length=15)
-    address = models.CharField('Address', max_length=60, blank=True)
-    email = models.EmailField('Email', max_length=30, blank=True)
-    phone = models.CharField('Phone', max_length=15, blank=True)
+    category = models.CharField(
+        'Business Category', max_length=100, null=True, blank=True)
+    contact_method = models.CharField(
+        'Contact Method', max_length=50, default='UNKNOWN')
+    address = models.CharField(
+        'Address', max_length=100, null=True, blank=True)
+    email = models.EmailField('Email', max_length=100, null=True, blank=True)
+    phone = models.CharField('Phone', max_length=50, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Business Info'
-        verbose_name_plural = 'Business Infos'
         ordering = ('category',)
 
     def __str__(self) -> str:
         return f'{self.category}'
 
 
-class Profile(models.Model):
-    external_id = models.CharField('External ID', max_length=60)
-    full_name = models.CharField('Full Name', 'full_name', max_length=60)
-    username = models.CharField('Username', 'username', max_length=60)
-    biography = models.CharField('Biography', 'biography', max_length=300)
-    followers = models.IntegerField('Followed By')
-    followees = models.IntegerField('Follows')
-    category = models.CharField('Profile Category', max_length=100)
-    profile_pic = models.URLField('Profile Picture')
+class Profile(ScrapeInfo):
+    full_name = models.CharField(
+        'Full Name', max_length=100, null=True, blank=True)
+    username = models.CharField('Username', max_length=100, unique=True)
+    biography = models.CharField(
+        'Biography', max_length=1_000, null=True, blank=True)
+    followers = models.IntegerField('Followed By', null=True, blank=True)
+    followees = models.IntegerField('Follows', null=True, blank=True)
+    category = models.CharField(
+        'Profile Category', max_length=100, null=True, blank=True)
+    profile_pic = models.URLField(
+        'Profile Picture', max_length=1_000, null=True, blank=True)
     is_business = models.BooleanField('Is Business', default=False)
-
-    businsess_info = models.OneToOneField(
-        BusinessInfo, on_delete=models.CASCADE, verbose_name='Business Info'
-    )
+    business_info = models.ForeignKey(
+        BusinessInfo, on_delete=models.DO_NOTHING, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Profile'
