@@ -44,7 +44,7 @@ header {
   color: darkred;
 }
 
-button {
+.controls__item > button {
   min-width: 75px;
   min-height: 75px;
   padding: 1rem;
@@ -53,15 +53,20 @@ button {
   border: none;
   border-radius: 50%;
 
-  background-color: palegreen;
-  color: orchid;
-
   font-weight: bold;
-  font-size: large;
+  font-size: xx-large;
 
   cursor: pointer;
 }
-button:active {
+.controls__item > button.run {
+  background-color: palegreen;
+  color: orchid;
+}
+.controls__item > button.stop {
+  background-color: orchid;
+  color: palegreen;
+}
+.controls__item > button:active {
   background-color: lightcoral;
 }
 
@@ -77,8 +82,8 @@ main {
 .dashboard__item {
   width: 250px;
   margin: 10px;
-  /* padding: 1rem;
-    border: 1px solid azure; */
+  padding: 1rem;
+  /* border: 1px solid azure; */
 }
 .dashboard__item a,
 .dashboard__item a:visited {

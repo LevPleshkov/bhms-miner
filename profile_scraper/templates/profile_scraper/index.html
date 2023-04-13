@@ -18,14 +18,14 @@
 
       <div class="controls">
         <div class="controls__item">
-          {% if false %}
-          <button>Stop</button>
+          {% if scraper_is_active %}
+          <button class="stop">⏹</button>
           {% else %}
-          <button>Run</button>
+          <button class="run">▶︎</button>
           {% endif %}
         </div>
         <div class="controls__item">
-          {% if false %}
+          {% if scraper_is_active %}
           <p class="status active">Active</p>
           {% elif false %}
           <p class="status loading">Loading</p>
@@ -41,23 +41,25 @@
         <div class="dashboard__item">
           <h2><a href="">Profiles</a></h2>
           <p>Count: {{ profiles_count }}</p>
-          <p>400K+ Followers: {{ 32 }}</p>
+          <p>400K+ Followers: {{ top_profiles_count }}</p>
         </div>
 
         <div class="dashboard__item">
           <h2><a href="">Posts</a></h2>
           <p>Count: {{ posts_count }}</p>
-          <p>Scraped: {{ 41209 }}</p>
+          <p>Scraped: {{ posts_scraped_count }}</p>
         </div>
 
         <div class="dashboard__item">
           <h2><a href="">Hashtags</a></h2>
           <p>Count: {{ hashtags_count }}</p>
+          <p>Scraped: {{ hashtags_scraped_count }}</p>
         </div>
 
         <div class="dashboard__item">
           <h2><a href="">Locations</a></h2>
           <p>Count: {{ locations_count }}</p>
+          <p>Scraped: {{ locations_scraped_count }}</p>
         </div>
       </div>
     </main>
