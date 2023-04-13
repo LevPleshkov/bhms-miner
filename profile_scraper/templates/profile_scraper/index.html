@@ -1,0 +1,65 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'profile_scraper/style.css' %}" />
+    <title>BHMS Miner</title>
+  </head>
+  <body>
+    <header>
+      <div class="title">
+        <h1>Welcome to BHMS Miner!</h1>
+        <p>Here, you can control and monitor the scraping processes.</p>
+      </div>
+
+      <div class="controls">
+        <div class="controls__item">
+          {% if false %}
+          <button>Stop</button>
+          {% else %}
+          <button>Run</button>
+          {% endif %}
+        </div>
+        <div class="controls__item">
+          {% if false %}
+          <p class="status active">Active</p>
+          {% elif false %}
+          <p class="status loading">Loading</p>
+          {% else %}
+          <p class="status inactive">Inactive</p>
+          {% endif %}
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="dashboard">
+        <div class="dashboard__item">
+          <h2><a href="">Profiles</a></h2>
+          <p>Count: {{ profiles_count }}</p>
+          <p>400K+ Followers: {{ 32 }}</p>
+        </div>
+
+        <div class="dashboard__item">
+          <h2><a href="">Posts</a></h2>
+          <p>Count: {{ posts_count }}</p>
+          <p>Scraped: {{ 41209 }}</p>
+        </div>
+
+        <div class="dashboard__item">
+          <h2><a href="">Hashtags</a></h2>
+          <p>Count: {{ hashtags_count }}</p>
+        </div>
+
+        <div class="dashboard__item">
+          <h2><a href="">Locations</a></h2>
+          <p>Count: {{ locations_count }}</p>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,90 @@
+:root {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: cadetblue;
+  color: azure;
+
+  margin: 0;
+  padding: min(7rem, 10vw);
+}
+
+header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5rem;
+}
+.title {
+  margin-top: 0;
+  /* margin-right: 5rem; */
+}
+.controls {
+  display: flex;
+  justify-content: space-between;
+  /* margin: 1rem; */
+}
+.controls__item {
+  margin-right: 5rem;
+}
+.status {
+  font-size: x-large;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.active {
+  color: green;
+}
+.loading {
+  color: lightcoral;
+}
+.inactive {
+  color: darkred;
+}
+
+button {
+  min-width: 75px;
+  min-height: 75px;
+  padding: 1rem;
+  margin: 0;
+
+  border: none;
+  border-radius: 50%;
+
+  background-color: palegreen;
+  color: orchid;
+
+  font-weight: bold;
+  font-size: large;
+
+  cursor: pointer;
+}
+button:active {
+  background-color: lightcoral;
+}
+
+main {
+  margin-top: 10vw;
+}
+
+.dashboard {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.dashboard__item {
+  width: 250px;
+  margin: 10px;
+  /* padding: 1rem;
+    border: 1px solid azure; */
+}
+.dashboard__item a,
+.dashboard__item a:visited {
+  color: inherit;
+  text-decoration: none;
+}
+.dashboard__item a:hover {
+  color: aquamarine;
+}
