@@ -37,7 +37,7 @@ celery -A bhms_miner purge
 - [x] upload existing profiles from csv-files to database
 - [x] add scraping mechanism for profiles
 
---- MVP Milestone ---
+@@@ MVP Milestone @@@
 
 - [ ] add `used_count` field to hashtag entity
 - [ ] download posts and profiles, hashtags and location from database
