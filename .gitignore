@@ -8,6 +8,10 @@ db.sqlite3
 media
 
 
+# Celery
+celerybeat-schedule.db
+
+
 # Python # 
 *.py[cod] 
 *$py.class 

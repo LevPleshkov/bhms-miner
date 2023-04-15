@@ -10,11 +10,20 @@ class ScrapeInfo(models.Model):
         'Last Scrpaed Timestamp', null=True, blank=True)
     scrape_count = models.IntegerField('Scrape Count', default=0)
 
+    __prev_scrape_count = None
+
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.__prev_scrape_count = self.scrape_count
+
     def save(self, *args, **kwargs):
         if not self.id:
             self.created = timezone.now()
+        if self.__prev_scrape_count != self.scrape_count:
+            self.last_scraped = timezone.now()
         self.modified = timezone.now()
-        return super(ScrapeInfo, self).save(*args, **kwargs)
+        super(ScrapeInfo, self).save(*args, **kwargs)
+        self.__prev_scrape_count = self.scrape_count
 
     class Meta:
         abstract = True
