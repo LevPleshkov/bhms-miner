@@ -47,7 +47,7 @@ class Command(BaseCommand):
 
         beg = beg if beg else 0
         end = end if end else len(df)
-        for idx, row in tqdm(df.iloc[beg:end].iterrows(), total=(end-beg),
+        for idx, row in tqdm(df.iloc[beg:end].iterrows(), total=(end - beg),
                              ncols=100, unit='row', colour='blue'):
             try:
                 binfo_obj, _ = BusinessInfo.objects.get_or_create(
@@ -72,8 +72,8 @@ class Command(BaseCommand):
                 else:
                     profiles_updated_cnt += 1
             except Exception as e:
-                errors.append(f"Row {idx} could not be updated or " +
-                              f"added to database! Reason: {e}")
+                errors.append(
+                    f"Row {idx} could not be updated or added to database! Reason: {e}")
 
         if len(errors):
             [self.stdout.write(
@@ -82,4 +82,4 @@ class Command(BaseCommand):
             f"Inserted {profiles_created_cnt}" +
             f", updated {profiles_updated_cnt}" +
             (f", failed {len(errors)}" if len(errors) else "") +
-            " profiles."),)
+            " profiles."))

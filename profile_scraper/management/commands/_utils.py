@@ -1,4 +1,4 @@
-""" When importing profiles or posts, these are commonly used 
+""" When importing profiles or posts, these are commonly used
     constants and functions.
 """
 from os.path import exists
@@ -27,6 +27,5 @@ def _get_root(cmd: BaseCommand, path: str) -> Optional[etree.Element]:
 
 def _validate_path(cmd: BaseCommand, path: str) -> bool:
     if not path or not exists(path):
-        cmd.stdout.write(f'here')
         raise CommandError(cmd.style.ERROR("File path does not exist"))
     return True

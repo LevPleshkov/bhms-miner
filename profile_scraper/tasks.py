@@ -28,7 +28,7 @@ def scrape_top_profiles():
 
 @shared_task
 def scrape_hidden_profiles():
-    """ Scrape by usernames of owners of posts with hidden 
+    """ Scrape by usernames of owners of posts with hidden
         likes count.
     """
     scrape_profiles.s(profile.get_hidden_usernames_to_scrape())()
@@ -45,7 +45,7 @@ def scrape_profiles(usernames: list[str]):
 
     def batches(seq: Sequence, size: int = 7):
         for i in range(0, len(seq), size):
-            yield seq[i:i+size]
+            yield seq[i:i + size]
 
     for batch in batches(usernames):
         scrape_tasks = group([scrape_profile.s(username).set(countdown=uniform(0, 7))

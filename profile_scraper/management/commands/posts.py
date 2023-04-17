@@ -120,8 +120,7 @@ class Command(BaseCommand):
 
             post_obj.save()
 
-        self.stdout.write(self.style.SUCCESS(f"Inserted " +
-                                             f"{posts_cnt} posts."),)
+        self.stdout.write(self.style.SUCCESS(f"Inserted {posts_cnt} posts."))
 
     def _parse_locations(self, root) -> List[Dict]:
         data = [

@@ -34,8 +34,8 @@ def config(country_code: str) -> None:
 
 
 def get_all_usernames_to_scrape(cutoff: int = 0) -> set[str]:
-    """ Finds owners of posts that have not yet been scraped 
-        ordered by descending priority (by likes count) and have 
+    """ Finds owners of posts that have not yet been scraped
+        ordered by descending priority (by likes count) and have
         more than the specified amount of likes.
     """
     #  TODO: add usernames of empty profiles, too
@@ -60,20 +60,20 @@ def get_hidden_usernames_to_scrape() -> set[str]:
 
 def get_top_usernames_to_scrape(followers_target: int = TARGET_FOLLOWERS_COUNT,
                                 tolerance: int = TARGET_TOLERANCE) -> set[str]:
-    """ Finds usernames that need to be rescraped and are close 
-        to the specified followers count within a specified tolerance, 
-        i.e. if target is 500k and tolarance is 100k, it will return 
+    """ Finds usernames that need to be rescraped and are close
+        to the specified followers count within a specified tolerance,
+        i.e. if target is 500k and tolarance is 100k, it will return
         all those with followers in range of 400–500k.
     """
     usernames = Profile.objects \
         .filter(followers__lte=followers_target,
-                followers__gte=(followers_target-tolerance)) \
+                followers__gte=(followers_target - tolerance)) \
         .values_list('username', flat=True)
     return set(usernames)
 
 
 def fetch_profile_data(username: str) -> dict[str, Union[str, int, bool]]:
-    """ Performs HTTP request to Instagram get profile data. 
+    """ Performs HTTP request to Instagram get profile data.
     """
     url = GET_PROFILE_URL.replace('{{ username }}', username)
     try:
@@ -100,7 +100,7 @@ def fetch_profile_data(username: str) -> dict[str, Union[str, int, bool]]:
 
 
 def update_profiles_data(profiles: list[dict[str, Union[str, int, bool]]]):
-    """ Updates profiles with new data. 
+    """ Updates profiles with new data.
     """
     for profile in profiles:
         binfo_obj, _ = BusinessInfo.objects.get_or_create(
@@ -126,7 +126,7 @@ def update_profiles_data(profiles: list[dict[str, Union[str, int, bool]]]):
 
 
 def _parse_profile(profile_json) -> dict[str, Union[str, int, bool]]:
-    """ Returns flat dictionary. 
+    """ Returns flat dictionary.
     """
     user_value = profile_json['graphql']['user']
     return {
