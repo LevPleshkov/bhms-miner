@@ -2,21 +2,22 @@ version: "3.8"
 
 services:
   miner_app:
-    build: ./
-    command: python manage.py runserver 0.0.0.0:8000
+    build:
+      context: ./
+      dockerfile: Dockerfile.prod
+    command: gunicorn bhms_miner.wsgi:application --bind 0.0.0.0:8000
     volumes:
-      - ./:/usr/src/app/
-    ports:
-      - 8000:8000
-    # env_file:
-      # - ./.env.dev
+      - static_volume:/home/app/miner/staticfiles
+    expose:
+      - 8000
+    env_file:
+      - ./.env.prod
     depends_on:
       - miner_db
       - celery_backend
 
   miner_db:
     image: postgres:15.2-alpine
-    restart: unless-stopped
     environment:
       - POSTGRES_USER=${SQL_USER}
       - POSTGRES_PASSWORD=${SQL_PASSWORD}
@@ -29,10 +30,18 @@ services:
   celery_backend:
     image: redis/redis-stack:latest
     container_name: bhms-celery-backend
-    restart: unless-stopped
     ports:
       - ${REDIS_PORT}:${REDIS_PORT}
 
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/home/app/miner/staticfiles
+    ports:
+      - 1337:80
+    depends_on:
+      - miner_app
+
 volumes:
   miner_db_data:
-    driver: local
+  static_volume:

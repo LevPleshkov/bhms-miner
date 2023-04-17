@@ -1,3 +1,8 @@
+# Development
+requirements_dev.txt
+readme.md
+
+
 # Django #
 *.log
 *.pot
