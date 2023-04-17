@@ -14,15 +14,16 @@ from django.db.models import F
 from profile_scraper.models import Post, Profile, BusinessInfo
 
 
-GET_PROFILE_URL = 'https://www.instagram.com/{{ username }}/?__a=1&__d=dis'
+OXYLABS_PROXY_URL_TEMPLATE: str = config('OXYLABS_PROXY_URL_TEMPLATE')
+GET_PROFILE_URL: str = config('IG_PROFILE_URL_TEMPLATE')
 COUNTRY_CODE = 'au'
 
-TARGET_FOLLOWERS_COUNT = 5e5
-TARGET_TOLERANCE = 1e5
+TARGET_FOLLOWERS_COUNT = int(config('IG_TARGET_FOLLOWERS_COUNT'))
+TARGET_TOLERANCE = int(config('IG_TARGET_TOLERANCE'))
 
 opener = build_opener(ProxyHandler({
-    'http': f"customer-{config('OXILAB_USER')}-cc-{COUNTRY_CODE}:{config('OXILAB_PASSWORD')}@pr.oxylabs.io:7777",
-    'https': f"customer-{config('OXILAB_USER')}-cc-{COUNTRY_CODE}:{config('OXILAB_PASSWORD')}@pr.oxylabs.io:7777", }))
+    'http': OXYLABS_PROXY_URL_TEMPLATE.replace('{{ oxylabs_cc }}', COUNTRY_CODE),
+    'https': OXYLABS_PROXY_URL_TEMPLATE.replace('{{ oxylabs_cc }}', COUNTRY_CODE), }))
 
 
 def config(country_code: str) -> None:
@@ -127,29 +128,20 @@ def update_profiles_data(profiles: list[dict[str, Union[str, int, bool]]]):
 def _parse_profile(profile_json) -> dict[str, Union[str, int, bool]]:
     """ Returns flat dictionary. 
     """
+    user_value = profile_json['graphql']['user']
     return {
-        'ID': profile_json['graphql']['user']['id'],
-        'Full name': profile_json['graphql']['user']['full_name'],
-        'Username': profile_json['graphql']['user']['username'],
-        'Biography': profile_json['graphql']['user']['biography'],
-        'Followers': profile_json['graphql']['user']['edge_followed_by'][
-            'count'
-        ],
-        'Followees': profile_json['graphql']['user']['edge_follow']['count'],
-        'Category': profile_json['graphql']['user']['category_name'],
-        'Profile pic': profile_json['graphql']['user']['profile_pic_url'],
-        'Is business': profile_json['graphql']['user']['is_business_account'],
-        'Business address': profile_json['graphql']['user'][
-            'business_address_json'
-        ],
-        'Business e-mail': profile_json['graphql']['user']['business_email'],
-        'Business phone number': profile_json['graphql']['user'][
-            'business_phone_number'
-        ],
-        'Business category': profile_json['graphql']['user'][
-            'business_category_name'
-        ],
-        'Business contact method': profile_json['graphql']['user'][
-            'business_contact_method'
-        ],
+        'ID': user_value['id'],
+        'Full name': user_value['full_name'],
+        'Username': user_value['username'],
+        'Biography': user_value['biography'],
+        'Followers': user_value['edge_followed_by']['count'],
+        'Followees': user_value['edge_follow']['count'],
+        'Category': user_value['category_name'],
+        'Profile pic': user_value['profile_pic_url'],
+        'Is business': user_value['is_business_account'],
+        'Business address': user_value['business_address_json'],
+        'Business e-mail': user_value['business_email'],
+        'Business phone number': user_value['business_phone_number'],
+        'Business category': user_value['business_category_name'],
+        'Business contact method': user_value['business_contact_method'],
     }

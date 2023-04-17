@@ -9,7 +9,7 @@ from bhms_miner import celery
 
 
 class Command(BaseCommand):
-    help = ""
+    help = "Scrape profiles in a selected mode."
 
     def add_arguments(self, parser: CommandParser) -> None:
         parser.add_argument('action', type=str, choices=['run', 'stop'],
