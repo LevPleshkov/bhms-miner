@@ -133,8 +133,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Celery
 
-CELERY_BROKER_URL = f"redis://{config('REDIS_HOST')}:{config('REDIS_PORT')}"
-CELERY_RESULT_BACKEND = f"redis://{config('REDIS_HOST')}:{config('REDIS_PORT')}"
+CELERY_BROKER_URL = config('CELERY_BROKER')
+CELERY_RESULT_BACKEND = config('CELERY_BACKEND')
 
 CELERY_BEAT_SCHEDULE = {
     'top_profiles': {

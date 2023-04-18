@@ -1,38 +1,65 @@
 version: "3.8"
 
 services:
-  miner_app:
-    build: ./
-    command: python manage.py runserver 0.0.0.0:8000
+  miner:
+    container_name: miner_django
+    build:
+      context: .
+      dockerfile: ./docker/local/Dockerfile
+    image: bhms_miner
+    command: sh /usr/src/miner/start-django
     volumes:
-      - ./:/usr/src/app/
+      - ./src:/usr/src/miner/src
     ports:
       - 8000:8000
-    # env_file:
-      # - ./.env.dev
+    env_file:
+      - ./.env.dev
     depends_on:
-      - miner_db
-      - celery_backend
+      - db
+      - redis
 
-  miner_db:
-    image: postgres:15.2-alpine
-    restart: unless-stopped
-    environment:
-      - POSTGRES_USER=${SQL_USER}
-      - POSTGRES_PASSWORD=${SQL_PASSWORD}
-      - POSTGRES_DB=${SQL_DATABASE}
-    ports:
-      - ${SQL_PORT}:${SQL_PORT}
+  celery_worker:
+    container_name: miner_c-worker
+    build:
+      context: .
+      dockerfile: ./docker/local/Dockerfile
+    image: celery_worker
+    command: sh /usr/src/miner/start-celeryworker
     volumes:
-      - miner_db_data:${SQL_DATA_VOLUME}
+      - ./src:/usr/src/miner/src
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - redis
+      - db
 
-  celery_backend:
-    image: redis/redis-stack:latest
-    container_name: bhms-celery-backend
-    restart: unless-stopped
-    ports:
-      - ${REDIS_PORT}:${REDIS_PORT}
+  celery_beat:
+    container_name: miner_c-beat
+    build:
+      context: .
+      dockerfile: ./docker/local/Dockerfile
+    image: celery_beat
+    command: sh /usr/src/miner/start-celerybeat
+    volumes:
+      - ./src:/usr/src/miner/src
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - redis
+      - db
+
+  db:
+    container_name: miner_db
+    image: postgres:15.2-alpine
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=bhms_miner
+      - POSTGRES_PASSWORD=bhms_pass
+      - POSTGRES_DB=bhms_chest
+
+  redis:
+    image: redis:7-alpine
 
 volumes:
-  miner_db_data:
-    driver: local
+  db_data:

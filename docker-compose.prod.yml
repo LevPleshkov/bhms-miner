@@ -1,47 +1,68 @@
 version: "3.8"
 
 services:
-  miner_app:
+  miner:
     build:
-      context: ./
-      dockerfile: Dockerfile.prod
-    command: gunicorn bhms_miner.wsgi:application --bind 0.0.0.0:8000
+      context: .
+      dockerfile: ./docker/production/django/Dockerfile
+    command: sh /home/app/miner/start-django
     volumes:
-      - static_volume:/home/app/miner/staticfiles
+      - static_volume:/home/app/miner/src/staticfiles
     expose:
       - 8000
     env_file:
       - ./.env.prod
     depends_on:
-      - miner_db
-      - celery_backend
+      - db
+      - redis
 
-  miner_db:
-    image: postgres:15.2-alpine
-    environment:
-      - POSTGRES_USER=${SQL_USER}
-      - POSTGRES_PASSWORD=${SQL_PASSWORD}
-      - POSTGRES_DB=${SQL_DATABASE}
-    ports:
-      - ${SQL_PORT}:${SQL_PORT}
+  celery_worker:
+    build:
+      context: .
+      dockerfile: ./docker/production/django/Dockerfile
+    command: sh /home/app/miner/start-celeryworker
     volumes:
-      - miner_db_data:${SQL_DATA_VOLUME}
+      - ./src:/home/app/miner/src
+    env_file:
+      - ./.env.prod
+    depends_on:
+      - redis
+      - db
 
-  celery_backend:
-    image: redis/redis-stack:latest
-    container_name: bhms-celery-backend
-    ports:
-      - ${REDIS_PORT}:${REDIS_PORT}
+  celery_beat:
+    build:
+      context: .
+      dockerfile: ./docker/production/django/Dockerfile
+    command: sh /home/app/miner/start-celerybeat
+    volumes:
+      - ./src:/home/app/miner/src
+    env_file:
+      - ./.env.prod
+    depends_on:
+      - redis
+      - db
+
+  db:
+    image: postgres:15.2-alpine
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.prod
+
+  redis:
+    image: redis:7-alpine
+    env_file:
+      - ./.env.prod
 
   nginx:
-    build: ./nginx
+    build: ./docker/production/nginx
     volumes:
-      - static_volume:/home/app/miner/staticfiles
+      - static_volume:/home/app/staticfiles
     ports:
       - 1337:80
     depends_on:
-      - miner_app
+      - miner
 
 volumes:
-  miner_db_data:
+  db_data:
   static_volume:

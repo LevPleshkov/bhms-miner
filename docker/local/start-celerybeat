@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+
+rm -f './celerybeat.pid'
+
+cd src
+celery -A bhms_miner beat -l INFO
