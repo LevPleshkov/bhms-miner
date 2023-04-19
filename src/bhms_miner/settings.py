@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'bhms_miner.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': config('DATABASE_ENGINE'),
-        'NAME': config('POSTGRES_DATABASE'),
+        'NAME': config('POSTGRES_DB'),
         'USER': config('POSTGRES_USER'),
         'PASSWORD': config('POSTGRES_PASSWORD'),
         'HOST': config('POSTGRES_HOST'),
