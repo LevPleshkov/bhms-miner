@@ -1,9 +1,18 @@
 # Requirements
 
-All the production requirements are included in **requirements.txt** file, wherease development requirements are added to them in **requirements_dev.txt** file.
+All the production requirements are included in **requirements.txt** file, wherease development requirements are added to them in **requirements.dev.txt** file.  To activate virtual environment in */venv* folder:
+```bash
+python -m venv venv
+```
+Install development requirements:
+```bash
+pip install -r src/requirements.dev.txt
+```
 
 
-# Run Server
+# Run Server Locally Without Docker
+
+*The following commands are executed from **src/** folder.*
 
 This project uses Django and Celery.  To have Celery auto-reloaded when changes to **.py** files happen during development, start the server with the following commands:
 
@@ -36,6 +45,7 @@ celery -A bhms_miner purge
 - [x] upload existing posts from xml-files to database
 - [x] upload existing profiles from csv-files to database
 - [x] add scraping mechanism for profiles
+- [x] dockerize
 
 @@@ MVP Milestone @@@
 
@@ -45,4 +55,3 @@ celery -A bhms_miner purge
 - [ ] add mechanism to set scraping parameters, start and stop scraping
 - [ ] periodically remove unpopular hashtags from database
 - [ ] add scraping mechanism for posts
-- [ ] ? dockerize

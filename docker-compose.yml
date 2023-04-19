@@ -1,65 +1,25 @@
 version: "3.8"
 
 services:
-  miner:
-    container_name: miner_django
-    build:
-      context: .
-      dockerfile: ./docker/local/Dockerfile
-    image: bhms_miner
-    command: sh /usr/src/miner/start-django
-    volumes:
-      - ./src:/usr/src/miner/src
-    ports:
-      - 8000:8000
-    env_file:
-      - ./.env.dev
-    depends_on:
-      - db
-      - redis
-
-  celery_worker:
-    container_name: miner_c-worker
-    build:
-      context: .
-      dockerfile: ./docker/local/Dockerfile
-    image: celery_worker
-    command: sh /usr/src/miner/start-celeryworker
-    volumes:
-      - ./src:/usr/src/miner/src
-    env_file:
-      - ./.env.dev
-    depends_on:
-      - redis
-      - db
-
-  celery_beat:
-    container_name: miner_c-beat
-    build:
-      context: .
-      dockerfile: ./docker/local/Dockerfile
-    image: celery_beat
-    command: sh /usr/src/miner/start-celerybeat
-    volumes:
-      - ./src:/usr/src/miner/src
-    env_file:
-      - ./.env.dev
-    depends_on:
-      - redis
-      - db
-
   db:
-    container_name: miner_db
+    container_name: miner_postgres
     image: postgres:15.2-alpine
+    restart: unless-stopped
     volumes:
       - db_data:/var/lib/postgresql/data/
     environment:
       - POSTGRES_USER=bhms_miner
       - POSTGRES_PASSWORD=bhms_pass
       - POSTGRES_DB=bhms_chest
+    ports:
+      - 5432:5432
 
   redis:
+    container_name: miner_redis
     image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - 6379:6379
 
 volumes:
   db_data:
