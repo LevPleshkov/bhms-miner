@@ -37,6 +37,7 @@ RUN addgroup -S app && adduser -S app -G app
 ENV HOME=/home/app
 ENV APP_HOME=/home/app/miner
 RUN mkdir $APP_HOME
+RUN mkdir -p $APP_HOME/src/staticfiles
 
 WORKDIR $APP_HOME
 
