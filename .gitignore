@@ -9,7 +9,7 @@ media
 
 
 # Celery
-celerybeat-schedule.db
+celerybeat-schedule*
 
 
 # Python # 

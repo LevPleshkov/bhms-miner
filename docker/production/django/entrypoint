@@ -11,11 +11,11 @@ import sys
 import psycopg2
 try:
     psycopg2.connect(
-        dbname="${SQL_DATABASE}",
-        user="${SQL_USER}",
-        password="${SQL_PASSWORD}",
-        host="${SQL_HOST}",
-        port="${SQL_PORT}",
+        dbname="${POSTGRES_DATABASE}",
+        user="${POSTGRES_USER}",
+        password="${POSTGRES_PASSWORD}",
+        host="${POSTGRES_HOST}",
+        port="${POSTGRES_PORT}",
     )
 except psycopg2.OperationalError:
     sys.exit(-1)
@@ -28,7 +28,7 @@ if [ "${DATABASE}" == "postgres" ]
 then
     echo "Waiting for postgres..."
 
-    while ! nc -z $SQL_HOST $SQL_PORT; do
+    while ! nc -z $POSTGRES_HOST $POSTGRES_PORT; do
         sleep 0.1
     done
 
