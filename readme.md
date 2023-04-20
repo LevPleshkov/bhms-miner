@@ -1,4 +1,6 @@
-# Requirements
+# BHMS Miner
+
+## Requirements
 
 All the production requirements are included in **requirements.txt** file, wherease development requirements are added to them in **requirements.dev.txt** file.  To activate virtual environment in */venv* folder:
 ```bash
@@ -10,7 +12,7 @@ pip install -r src/requirements.dev.txt
 ```
 
 
-# Run Server Locally Without Docker
+## Run Server Locally Without Docker
 
 *The following commands are executed from **src/** folder.*
 
@@ -37,7 +39,17 @@ celery -A bhms_miner purge
 ```
 
 
-# TODO List
+## Deployment
+
+```bash
+docker-compose -f docker-compose.prod.yml up -d --build
+```
+```bash
+docker-compose -f docker-compose.prod.yml down -v
+```
+
+
+## TODO List
 
 - [x] model database
 - [x] create a homescreen dashboard
@@ -49,6 +61,9 @@ celery -A bhms_miner purge
 
 @@@ MVP Milestone @@@
 
+- [ ] authentication
+- [ ] upload posts and profiles from gui
+- [ ] add favicon
 - [ ] add `used_count` field to hashtag entity
 - [ ] download posts and profiles, hashtags and location from database
 - [ ] ? split tasks in queues
