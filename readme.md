@@ -49,7 +49,9 @@ docker-compose -f docker-compose.prod.yml down -v
 ```
 
 
-## TODO List
+## TODO
+
+### List
 
 - [x] model database
 - [x] create a homescreen dashboard
@@ -70,3 +72,11 @@ docker-compose -f docker-compose.prod.yml down -v
 - [ ] add mechanism to set scraping parameters, start and stop scraping
 - [ ] periodically remove unpopular hashtags from database
 - [ ] add scraping mechanism for posts
+
+### Approach to implement
+
+Profiles do not have location info, while posts have location info and hashtags.  That's why we first scrape posts by locations and hashtags, then select the most promising of the to scrape profiles ny their authors.  There are posts with hidden likes (-1) that seem to be the most fruitful by how many profiles with high amounts of followers they allow to scrape.  There are posts that have just been published and their small likes count doesn't mean they were published by unpopular authors.  The following scheme seems to be optimal:
+
+- Scrape all posts with hidden likes,
+- Scrape all posts with likes count more than 10 (posts with lesser values do not result many popular profiles for the cost of residence proxies),
+- Periodically rescrape profiles that are close to targeted amount of followers.
