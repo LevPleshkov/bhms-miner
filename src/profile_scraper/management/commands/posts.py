@@ -23,21 +23,55 @@ class Command(BaseCommand):
         parser.add_argument('mode', type=str, choices=['download', 'upload'])
         parser.add_argument('-p', '--path', type=str, required=True,
                             help="Specify path to xml-file with posts that \
-                            were scraped by locations or hashtags",)
+                                were scraped by locations or hashtags",)
+        parser.add_argument('-a', '--apify-actor', required=True,
+                            choices=['instagram-scraper',
+                                     'instagram-hashtag-scraper'],
+                            help="Specify APIFY Actor that was used to produce \
+                                scraping results",)
         parser.add_argument('-b', '--beg', type=int,
                             help="Specify the first item in xml-file \
-                            to upload into database, default is 0",)
+                                to upload into database, default is 0",)
         parser.add_argument('-e', '--end', type=int,
                             help="Specify the last item in xml-file \
-                            to upload into database, default is len(items)",)
+                                to upload into database, default is len(items)",)
 
     def handle(self, *args: Any, **options: Any) -> Optional[str]:
         mode = options['mode']
         if mode == 'upload':
-            self._load_posts(options['path'], options['beg'], options['end'])
+            actor = options['apify-actor']
+            if actor == 'instagram-scraper':
+                self._load_profiles_from_posts(options['path'])
+            elif actor == 'instagram-hashtag-scraper':
+                self._load_posts(options['path'], options['beg'], options['end'])
         else:
             raise CommandError(
                 self.style.ERROR('Sorry, only upload functionality is implemented.'),)
+
+    def _load_profiles_from_posts(self, path: str) -> None:
+        """ Descovered on 2023 Apr 20, the format of APIFY export of
+            posts scraped by location changed.  This method just adds new profiles
+            with external idetifiers and usernames.  It also should add posts, locations,
+            and hashtags, but this will probably be added in the future.
+        """
+        root = _get_root(self, path)
+        usernames = root.xpath('.//user/username')
+        eids = root.xpath('.//user/pk')
+
+        if len(usernames) != len(eids):
+            self.stdout.write(self.style.ERROR('Amounts of usernames and external ids \
+                                               are not equal!'))
+            return
+
+        profiles_cnt = 0
+        for eid, username in tqdm(zip(eids, usernames), total=len(usernames),
+                                  ncols=100, unit='item', colour='green'):
+            _, created = Profile.objects.get_or_create(
+                external_id=eid.text,
+                defaults={'username': username.text, },)
+            profiles_cnt += 1 if created else 0
+        self.stdout.write(self.style.SUCCESS(f"Inserted {profiles_cnt} profiles from " +
+                                             f"{len(root.xpath('.//item'))} locations data."))
 
     def _load_posts(self, path: str, beg: int = None, end: int = None) -> None:
         root = _get_root(self, path)
