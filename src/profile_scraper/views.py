@@ -13,6 +13,8 @@ def index(request):
         'profiles_count': Profile.objects.count(),
         'top_profiles_count': Profile.objects.filter(
             followers__gte=400_000).count(),
+        'profiles_scraped_count': Profile.objects.filter(
+            followers__isnull=False).count(),
         'posts_count': Post.objects.count(),
         'posts_scraped_count': Post.objects.aggregate(
             Sum('scrape_count', default=0))['scrape_count__sum'],

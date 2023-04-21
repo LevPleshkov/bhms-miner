@@ -38,16 +38,18 @@ def get_all_usernames_to_scrape(cutoff: int = 0) -> set[str]:
         ordered by descending priority (by likes count) and have
         more than the specified amount of likes.
     """
-    #  TODO: add usernames of empty profiles, too
     owners = Post.objects \
         .filter(likes_count__gt=cutoff) \
         .order_by('-likes_count') \
         .values_list('owner_username', flat=True)
-    usernames = Profile.objects \
+    full_usernames = Profile.objects \
         .filter(followers__isnull=False) \
         .values_list('username', flat=True)
+    empty_usernames = Profile.objects \
+        .filter(followers__isnull=True) \
+        .values_list('username', flat=True)
     return set([username for username in list(owners)
-                if username not in list(usernames)])
+                if username not in list(full_usernames)]).union(set(empty_usernames))
 
 
 def get_hidden_usernames_to_scrape() -> set[str]:
