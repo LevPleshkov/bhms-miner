@@ -45,8 +45,9 @@ celery -A bhms_miner purge
 docker-compose -f docker-compose.prod.yml up -d --build
 ```
 ```bash
-docker-compose -f docker-compose.prod.yml down -v
+docker-compose -f docker-compose.prod.yml down
 ```
+**❗️ If added, `-v` (`--volumes`) flag will remove all volumes data.**
 
 
 ## TODO

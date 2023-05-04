@@ -139,10 +139,10 @@ CELERY_RESULT_BACKEND = config('CELERY_BACKEND')
 CELERY_BEAT_SCHEDULE = {
     'top_profiles': {
         'task': 'profile_scraper.tasks.scrape_top_profiles',
-        'schedule': crontab(day_of_week='tue,fri'),
+        'schedule': crontab(minute=0, hour=0, day_of_week='tue,fri'),
     },
     'hidden_likes_profiles': {
         'task': 'profile_scraper.tasks.scrape_hidden_profiles',
-        'schedule': crontab(day_of_week='mon,thu'),
+        'schedule': crontab(minute=0, hour=0, day_of_week='mon,thu'),
     },
 }
